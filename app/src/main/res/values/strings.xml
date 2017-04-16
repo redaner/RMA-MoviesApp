@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">RMA_Projekat</string>
+    <string name="reziseri">DIRECTORS</string>
+    <string name="glumci">ACTORS</string>
+    <string name="zanrovi">GENRES</string>
+    <string name="godina_rod">Year of birth: </string>
+    <string name="godina_smrt">Year of death: </string>
+    <string name="mjesto_rod">Place of birth: </string>
+    <string name="spol">Gender: </string>
+    <string name="imdb">IMDB: </string>
+    <string name="bio">Biography: </string>
+    <string name="ostalo">OTHER</string>>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

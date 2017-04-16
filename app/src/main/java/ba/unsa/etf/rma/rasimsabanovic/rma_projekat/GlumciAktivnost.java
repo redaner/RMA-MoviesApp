@@ -1,5 +1,9 @@
 package ba.unsa.etf.rma.rasimsabanovic.rma_projekat;
 
+
+
+
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,6 +14,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import java.io.ByteArrayOutputStream;
@@ -17,29 +22,97 @@ import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GlumciAktivnost extends AppCompatActivity {
+public class GlumciAktivnost extends AppCompatActivity implements ButtonsFragment.buttonClick, GlumciFragment.onGlumacClick{
 
     public static boolean flag=false;
+    private Boolean siri = false;
+
+    ArrayList<Glumac> glumci = new ArrayList<>();
+    ArrayList<Reziser> reziseri = new ArrayList<>();
+    ArrayList<Zanr> zanrovi = new ArrayList<>();
+
+    @Override
+    public void klik(int pos) {
+        FragmentManager fm = getFragmentManager();
+
+        DetaljiFragment df = new DetaljiFragment();
+        Bundle argumenti = new Bundle();
+        argumenti.putParcelable("glumac", glumci.get(pos));
+        df.setArguments(argumenti);
+        if (!siri) {
+            fm.beginTransaction().replace(R.id.liste, df).addToBackStack(null).commit();
+        }
+        else {
+            fm.beginTransaction().replace(R.id.drugi, df).addToBackStack(null).commit();
+        }
+    }
+
+    @Override
+    public void onGlumciClick() {
+
+        FragmentManager fm = getFragmentManager();
+        GlumciFragment gf = new GlumciFragment();
+        Bundle argumenti= new Bundle();
+        argumenti.putParcelableArrayList("lista_glumaca", glumci);
+        gf.setArguments(argumenti);
+        fm.beginTransaction().replace(R.id.liste, gf).addToBackStack(null).commit();
+
+    }
+
+    @Override
+    public void onReziseriClick() {
+        FragmentManager fm = getFragmentManager();
+
+       // ReziseriFragment rf = (ReziseriFragment)fm.findFragmentById(R.id.liste);
+
+        //if (rf == null) {
+        ReziseriFragment rf = new ReziseriFragment();
+        Bundle argumenti= new Bundle();
+        argumenti.putParcelableArrayList("lista_rezisera", reziseri);
+        rf.setArguments(argumenti);
+        fm.beginTransaction().replace(R.id.liste, rf).addToBackStack(null).commit();
+        //}
+    }
+
+    @Override
+    public void onZanroviClick() {
+        FragmentManager fm = getFragmentManager();
+
+
+        ZanroviFragment rf = new ZanroviFragment();
+        Bundle argumenti= new Bundle();
+        argumenti.putParcelableArrayList("lista_zanrova", zanrovi);
+        rf.setArguments(argumenti);
+        fm.beginTransaction().replace(R.id.liste, rf).addToBackStack(null).commit();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+
+        } else {
+            getFragmentManager().popBackStack();
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_glumci_aktivnost);
-        final Button dugme_glumci = (Button)findViewById(R.id.buttonGlumci);
-        final Button dugme_reziseri = (Button)findViewById(R.id.buttonReziseri);
-        final Button dugme_zanrovi = (Button)findViewById(R.id.buttonZanrovi);
-        final ListView lista_glumci = (ListView)findViewById(R.id.listaGlumci);
-        ArrayList<Glumac> glumci = new ArrayList<>();
-        ArrayList<Reziser> reziseri = new ArrayList<>();
-        ArrayList<Zanr> zanrovi = new ArrayList<>();
 
-        if (flag) {
-            Intent i = getIntent();
-            glumci = i.getParcelableArrayListExtra("glumci");
-            reziseri = i.getParcelableArrayListExtra("reziseri");
-            zanrovi = i.getParcelableArrayListExtra("zanrovi");
-        }
-        else {
-            flag = true;
+        //final ListView lista_glumci = (ListView)findViewById(R.id.listaGlumci);
+        glumci = new ArrayList<>();
+        reziseri = new ArrayList<>();
+        zanrovi = new ArrayList<>();
+
+
+
             glumci = new ArrayList<Glumac>();
             glumci.add(new Glumac("Leonardo", "DiCaprio", 1974, -1, "Leonardo Wilhelm DiCaprio is a renowned American actor and producer known for his good looks and exceptional acting skills. Marking his entry through television in 1991 with ‘Santa Barbara’, he went on to become an international star. He ventured into the film world through a horror flick ‘Critters 3’ and continued with many more like ‘This Boy’s Life’, ‘Titanic’, ‘The Man in the Iron Mask’ and others. His participation in dramas like ‘Romeo + Juliet’, ‘The Basket ball Dairies’ and ‘Catch Me If You Can’ brought him tremendous acclaim. It was ‘Titanic’ that served as a milestone in turning around his overall image as an actor. He received his first Golden Globe Award post ‘Titanic’. He has touched upon various genres of cinema ranging from romance, historical and period drama, thriller and even science fiction. He has received some of the most coveted honors such as the Golden Globe Awards for Best Actor in a Drama, Musical or Comedy for his performance in the films ‘The Aviator’ and ‘The Wolf of Wall Street’, and the Academy Award for Best Actor for the movie ‘The Revenant’. Apart from being a producer and an actor, he is also a philanthropist. His concern for the society and the environment is clearly evident from the donations he makes towards wildlife and environment conservational groups.\n" +
                     "Read more at http://www.thefamouspeople.com/profiles/leonardo-wilhelm-dicaprio-2135.php#3jbdxgJVjgV4KsTP.99", "leodicaprio", "Los Angeles", "M", "http://www.imdb.com/name/nm0000138/"));
@@ -78,15 +151,122 @@ public class GlumciAktivnost extends AppCompatActivity {
             zanrovi.add(new Zanr("Sci-Fi", "scifi"));
             zanrovi.add(new Zanr("Fantasy", "fantasy"));
             zanrovi.add(new Zanr("Komedija", "comedy"));
-        }
+
         final ArrayList<Glumac> gl = glumci;
         final ArrayList<Reziser> re = reziseri;
         final ArrayList<Zanr> za = zanrovi;
         final GlumacAdapter adapter;
-        adapter = new GlumacAdapter(this, R.layout.glumac_u_listi, glumci, getResources());
-        lista_glumci.setAdapter(adapter);
+       // adapter = new GlumacAdapter(this, R.layout.glumac_u_listi, glumci, getResources());
+        //lista_glumci.setAdapter(adapter);
 
-        lista_glumci.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        FragmentManager fm = getFragmentManager();
+        FrameLayout dugmad = (FrameLayout) findViewById(R.id.dugmad);
+
+        FrameLayout ldetalji = (FrameLayout) findViewById(R.id.drugi);
+
+        if (ldetalji != null) {
+            siri = true;
+            DetaljiFragment df;
+            //df = (DetaljiFragment) fm.findFragmentById(R.id.drugi);
+           // if (df == null) {
+                df = new DetaljiFragment();
+                Bundle argumenti = new Bundle();
+                argumenti.putParcelable("glumac", glumci.get(0));
+                df.setArguments(argumenti);
+                fm.beginTransaction().replace(R.id.drugi, df).addToBackStack(null).commit();
+            //}
+
+        }
+        GlumciFragment gf;
+        Bundle argumenti;
+
+        gf = new GlumciFragment();
+
+        final GlumciFragment gg = gf;
+
+        final Button dugme_glumci = (Button) findViewById(R.id.button9);
+        final Button dugme_ostalo = (Button) findViewById(R.id.button4);
+
+        if (dugme_glumci != null && dugme_ostalo != null) {
+            dugme_glumci.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentManager fm = getFragmentManager();
+                    fm.beginTransaction().replace(R.id.liste, gg).commit();
+                    DetaljiFragment df = new DetaljiFragment();
+                    Bundle argumenti = new Bundle();
+                    argumenti.putParcelable("glumac", glumci.get(0));
+                    df.setArguments(argumenti);
+                    fm.beginTransaction().replace(R.id.drugi, df).addToBackStack(null).commit();
+                }
+            });
+
+            dugme_ostalo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentManager fm = getFragmentManager();
+                    ReziseriFragment rf = new ReziseriFragment();
+                    Bundle argumenti = new Bundle();
+                    argumenti.putParcelableArrayList("lista_rezisera", reziseri);
+                    rf.setArguments(argumenti);
+                    fm.beginTransaction().replace(R.id.liste, rf).commit();
+
+                    ZanroviFragment zf = new ZanroviFragment();
+                    Bundle argumenti1 = new Bundle();
+                    argumenti1.putParcelableArrayList("lista_zanrova", zanrovi);
+                    zf.setArguments(argumenti1);
+                    fm.beginTransaction().replace(R.id.drugi, zf).commit();
+                }
+            });
+        }
+        argumenti = new Bundle();
+        argumenti.putParcelableArrayList("lista_glumaca", glumci);
+        gf.setArguments(argumenti);
+        fm.beginTransaction().replace(R.id.liste, gf).addToBackStack(null).commit();
+
+        if (savedInstanceState == null) {
+
+           /* FragmentManager fm = getFragmentManager();
+            FrameLayout dugmad = (FrameLayout) findViewById(R.id.dugmad);
+
+            FrameLayout ldetalji = (FrameLayout) findViewById(R.id.drugi);*/
+
+            if (ldetalji != null) {
+                siri = true;
+                DetaljiFragment df;
+                df = (DetaljiFragment) fm.findFragmentById(R.id.drugi);
+                if (df == null) {
+                    df = new DetaljiFragment();
+                    argumenti = new Bundle();
+                    argumenti.putParcelable("glumac", glumci.get(0));
+                    df.setArguments(argumenti);
+                    fm.beginTransaction().replace(R.id.drugi, df).addToBackStack(null).commit();
+                }
+
+            }
+
+            if (!siri) {
+                ButtonsFragment bf = (ButtonsFragment) fm.findFragmentById(R.id.dugmad);
+                if (bf == null) {
+                    bf = new ButtonsFragment();
+                    fm.beginTransaction().replace(R.id.dugmad, bf).commit();
+                }
+            }
+
+             gf = (GlumciFragment) fm.findFragmentById(R.id.liste);
+            if (gf == null) {
+                gf = new GlumciFragment();
+                argumenti = new Bundle();
+                argumenti.putParcelableArrayList("lista_glumaca", glumci);
+                gf.setArguments(argumenti);
+                fm.beginTransaction().replace(R.id.liste, gf).addToBackStack(null).commit();
+            } else {
+                fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+        }
+
+
+       /* lista_glumci.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent myIntent = new Intent(GlumciAktivnost.this, BiografijaAktivnost.class);
@@ -116,6 +296,6 @@ public class GlumciAktivnost extends AppCompatActivity {
                 i.putExtra("zanrovi", za);
                 GlumciAktivnost.this.startActivity(i);
             }
-        });
+        }); */
     }
 }
