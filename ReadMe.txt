@@ -1,4 +1,4 @@
-+++++ Rasim äabanovic
++++++ Rasim ≈†abanovic
 +++++ 17407
 +++++ 2016/17
 +++++ RMA
@@ -7,4 +7,9 @@
 +++++ Uradeno: 
 +++++ sve
 +++++ Nije uradeno:
-+++++ niöta
++++++ ni≈°ta
++++++ Spirala 2
++++++ Uradeno: 
++++++ sve
++++++ Nije uradeno:
++++++ ni≈°ta
