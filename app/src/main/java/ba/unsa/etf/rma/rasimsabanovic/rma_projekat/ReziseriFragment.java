@@ -70,7 +70,9 @@ public class ReziseriFragment extends Fragment {
 
         if (getArguments().containsKey("lista_rezisera")) {
 
-            reziseri = getArguments().getParcelableArrayList("lista_rezisera");
+            SaveState s = (SaveState) getActivity().getApplication();
+            reziseri = s.getReziseri();
+
 
             ListView lv = (ListView)getView().findViewById(R.id.listaReziseri);
 

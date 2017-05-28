@@ -16,13 +16,14 @@ import java.io.Serializable;
 
 public class Glumac implements Parcelable{
 
-    public Glumac(final String ime, final String prezime, final int godina_rodjenja, final int godina_smrti, final String biografija, final String slika, final String mjesto_rodjenja, final String spol, final String imdb) {
+    public Glumac(final int id, final String ime, final int godina_rodjenja, final int godina_smrti, final String biografija, final double rating, final String slika, final String mjesto_rodjenja, final String spol, final String imdb) {
+        this.id = id;
         this.ime = ime;
-        this.prezime = prezime;
         this.godina_rodjenja = godina_rodjenja;
         this.godina_smrti = godina_smrti;
         this.biografija = biografija;
         this.slika = slika;
+        this.rating = rating;
         this.mjesto_rodjenja = mjesto_rodjenja;
         this.spol = spol;
         this.imdb = imdb;
@@ -36,13 +37,13 @@ public class Glumac implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-
+        out.writeInt(id);
         out.writeString(ime);
-        out.writeString(prezime);
         out.writeInt(godina_rodjenja);
         out.writeInt(godina_smrti);
         out.writeString(biografija);
         out.writeString(slika);
+        out.writeDouble(rating);
         out.writeString(mjesto_rodjenja);
         out.writeString(spol);
         out.writeString(imdb);
@@ -61,16 +62,27 @@ public class Glumac implements Parcelable{
     };
 
     private Glumac(Parcel in) {
+        id = in.readInt();
         ime = in.readString();
-        prezime = in.readString();
         godina_rodjenja = in.readInt();
         godina_smrti = in.readInt();
         biografija = in.readString();
         slika = in.readString();
+        rating = in.readDouble();
         mjesto_rodjenja = in.readString();
         spol = in.readString();
         imdb = in.readString();
         biografija = in.readString();
+    }
+
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     private String ime;
@@ -83,15 +95,6 @@ public class Glumac implements Parcelable{
         this.ime = ime;
     }
 
-    private  String prezime;
-
-    public String getPrezime() {
-        return prezime;
-    }
-
-    public void setPrezime(final String prezime) {
-        this.prezime = prezime;
-    }
 
     public int getGodina_rodjenja() {
         return godina_rodjenja;
@@ -132,6 +135,17 @@ public class Glumac implements Parcelable{
     public void setSlika(final String slika) {
         this.slika = slika;
     }
+
+    private double rating;
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
 
     private String mjesto_rodjenja;
 

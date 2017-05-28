@@ -8,9 +8,9 @@ import android.os.Parcelable;
  */
 
 public class Reziser implements Parcelable {
-    public Reziser(final String ime, final String prezime) {
+    public Reziser(final String ime) {
         this.ime = ime;
-        this.prezime = prezime;
+
     }
 
     @Override
@@ -22,7 +22,7 @@ public class Reziser implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(ime);
-        out.writeString(prezime);
+
     }
 
     public static final Parcelable.Creator<Reziser> CREATOR = new Parcelable.Creator<Reziser>() {
@@ -37,7 +37,7 @@ public class Reziser implements Parcelable {
 
     private Reziser(Parcel in) {
         ime = in.readString();
-        prezime = in.readString();
+
     }
 
     private String ime;
@@ -50,13 +50,5 @@ public class Reziser implements Parcelable {
         this.ime = ime;
     }
 
-    private String prezime;
 
-    public String getPrezime() {
-        return prezime;
-    }
-
-    public void setPrezime(final String prezime) {
-        this.prezime = prezime;
-    }
 }

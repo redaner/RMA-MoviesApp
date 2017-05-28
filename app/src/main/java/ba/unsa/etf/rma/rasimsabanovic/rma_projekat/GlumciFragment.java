@@ -2,13 +2,18 @@ package ba.unsa.etf.rma.rasimsabanovic.rma_projekat;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -22,7 +27,7 @@ import java.util.ArrayList;
  * Use the {@link GlumciFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GlumciFragment extends Fragment {
+public class GlumciFragment extends Fragment implements PretragaResultReceiver.Receiver{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -37,8 +42,35 @@ public class GlumciFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private PretragaResultReceiver mReceiver;
+
     public GlumciFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+        switch (resultCode) {
+            case PretragaGlumaca.STATUS_RUNNING:
+                break;
+            case PretragaGlumaca.STATUS_FINISHED:
+                glumci = resultData.getParcelableArrayList("glumci");
+                GlumacAdapter ga = new GlumacAdapter(getActivity(), R.layout.glumac_u_listi, glumci, getResources());
+                View v = getView();
+                ListView lv = null;
+                if (v != null) {
+                    lv = (ListView) getView().findViewById(R.id.listaGlumci);
+                }
+                OnFragmentInteractionListener listener = (OnFragmentInteractionListener) getActivity();
+                listener.onFragmentSetGlumci(glumci);
+
+                lv.setAdapter(ga);
+                break;
+            case PretragaGlumaca.STATUS_ERROR:
+                String error = resultData.getString(Intent.EXTRA_TEXT);
+     //           Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
+                break;
+        }
     }
 
     /**
@@ -62,6 +94,7 @@ public class GlumciFragment extends Fragment {
     public interface onGlumacClick {
         public void klik(int pos);
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,13 +120,22 @@ public class GlumciFragment extends Fragment {
 
         if (getArguments().containsKey("lista_glumaca")) {
 
-            glumci = getArguments().getParcelableArrayList("lista_glumaca");
+            SaveState s = (SaveState) getActivity().getApplication();
+            glumci = s.getGlumci();
+
+            GlumciAktivnost g = (GlumciAktivnost) getActivity();
+            if (g != null) {
+                g.setGlumci(glumci);
+            }
 
             ListView lv = (ListView)getView().findViewById(R.id.listaGlumci);
+            final Button pretraga = (Button)getView().findViewById(R.id.buttonPretraga);
+            final EditText tekstPretrage = (EditText)getView().findViewById(R.id.editTextPrertraga);
 
             GlumacAdapter ga = new GlumacAdapter(getActivity(), R.layout.glumac_u_listi, glumci, getResources());
-
+            ga.notifyDataSetChanged();
             lv.setAdapter(ga);
+            ga.notifyDataSetChanged();
 
             try {
                 oic = (onGlumacClick)getActivity();
@@ -102,6 +144,22 @@ public class GlumciFragment extends Fragment {
                 throw new ClassCastException(getActivity().toString() + "treba implementirati onGlumacClick");
 
             }
+
+            pretraga.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_SYNC, null, getActivity(), PretragaGlumaca.class);
+                    mReceiver = new PretragaResultReceiver(new Handler());
+                    mReceiver.setReceiver(GlumciFragment.this);
+
+                    String tekst = tekstPretrage.getText().toString();
+
+                    intent.putExtra("receiver", mReceiver);
+                    intent.putExtra("query", tekst);
+
+                    getActivity().startService(intent);
+                }
+            });
 
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -118,7 +176,7 @@ public class GlumciFragment extends Fragment {
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+          //  mListener.onFragmentInteraction(uri);
         }
     }
 
@@ -151,6 +209,7 @@ public class GlumciFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        //void onFragmentInteraction(Uri uri);
+        void onFragmentSetGlumci(ArrayList<Glumac> g);
     }
 }

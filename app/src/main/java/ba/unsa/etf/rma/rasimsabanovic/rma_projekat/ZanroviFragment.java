@@ -77,7 +77,9 @@ public class ZanroviFragment extends Fragment {
 
         if (getArguments().containsKey("lista_zanrova")) {
 
-            zanrovi = getArguments().getParcelableArrayList("lista_zanrova");
+
+            SaveState s = (SaveState) getActivity().getApplication();
+            zanrovi = s.getZanrovi();
 
             ListView lv = (ListView)getView().findViewById(R.id.listaZanrovi);
 

@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -98,7 +100,7 @@ public class DetaljiFragment extends Fragment {
             imdb.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    String s = imdb.getText().toString().substring(6, imdb.getText().toString().length() - 1);
+                    String s = imdb.getText().toString().substring(5, imdb.getText().toString().length() - 1);
                     Uri uri = Uri.parse(s);
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
@@ -118,8 +120,11 @@ public class DetaljiFragment extends Fragment {
                 }
             });
 
-            slika.setImageBitmap(b);
-            ime.setText(glumac.getIme() + " " + glumac.getPrezime());
+            String imageUri = glumac.getSlika();
+
+            Picasso.with(getActivity()).load(imageUri).resize(300, 300).centerInside().into(slika);
+
+            ime.setText(glumac.getIme());
 
             god_rod.setText(getText(R.string.godina_rod) + Integer.toString(glumac.getGodina_rodjenja()));
             if (glumac.getGodina_smrti() != -1) {
@@ -138,6 +143,8 @@ public class DetaljiFragment extends Fragment {
             }
             else
                 spol.setText(getText(R.string.spol) + "Other");
+
+
 
             imdb.setText(getText(R.string.imdb) + glumac.getImdb());
             bio.setText(getText(R.string.bio) + "\n" + glumac.getBiografija());

@@ -21,15 +21,15 @@
             android:id="@+id/textView2"
             android:layout_width="321dp"
             android:layout_height="27dp"
-            android:gravity="center_vertical|center"
+            android:gravity="center_vertical"
             android:text="TextView"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="320dp"
             android:layout_height="37dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:text="TextView" />
 
         <LinearLayout
@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:text="TextView" />
 
             <TextView
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:text="TextView" />
         </LinearLayout>
     </LinearLayout>

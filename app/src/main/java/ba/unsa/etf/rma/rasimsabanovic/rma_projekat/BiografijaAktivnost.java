@@ -72,7 +72,7 @@ public class BiografijaAktivnost extends AppCompatActivity {
         });
 
         slika.setImageBitmap(b);
-        ime.setText(glumac.getIme() + " " + glumac.getPrezime());
+        //ime.setText(glumac.getIme() + " " + glumac.getPrezime());
         god_rod.setText("Year of birth: " + Integer.toString(glumac.getGodina_rodjenja()));
         if (glumac.getGodina_smrti() != -1) {
             god_smrt.setVisibility(View.VISIBLE);

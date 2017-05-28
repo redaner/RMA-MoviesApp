@@ -39,7 +39,7 @@ public class ReziserAdapter extends ArrayAdapter {
         LayoutInflater inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         rowView = inflater.inflate(R.layout.reziser_u_listi, null);
         h.imeprezime = (TextView) rowView.findViewById(R.id.textView2);
-        h.imeprezime.setText(reziseri.get(position).getIme() + " " + reziseri.get(position).getPrezime());
+        h.imeprezime.setText(reziseri.get(position).getIme());
         return rowView;
     }
 
