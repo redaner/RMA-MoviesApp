@@ -159,8 +159,7 @@ public class PretragaGlumaca extends IntentService {
                             biography, Double.parseDouble(popularity), slika, placeOfBirth, gender.equals("1") ? "F" : "M", imdb));
 
 
-                    bundle.putParcelableArrayList("glumci", glumci);
-                    mReceiver.send(STATUS_FINISHED, bundle);
+
 
                 }
                 catch (MalformedURLException e) {
@@ -177,7 +176,8 @@ public class PretragaGlumaca extends IntentService {
             }
 
 
-
+            bundle.putParcelableArrayList("glumci", glumci);
+            mReceiver.send(STATUS_FINISHED, bundle);
 
 
         }
