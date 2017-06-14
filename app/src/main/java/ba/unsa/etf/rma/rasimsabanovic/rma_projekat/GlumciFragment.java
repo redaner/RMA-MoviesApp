@@ -281,7 +281,9 @@ public class GlumciFragment extends Fragment implements PretragaResultReceiver.R
 
                             }
                         }
+                        else baza = false;
                     }
+                    else baza = false;
 
                     if (baza) {
                         ga = new GlumacAdapter(getActivity(), R.layout.glumac_u_listi, glumci, getResources());

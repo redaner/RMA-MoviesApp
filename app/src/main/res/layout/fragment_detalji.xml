@@ -21,7 +21,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/lejaut"
+                android:id="@+id/lejaut1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -29,16 +29,6 @@
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp"
                 >
-
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
-                </ScrollView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -53,32 +43,38 @@
                         android:layout_height="wrap_content"
                         app:srcCompat="@drawable/action"/>
 
-                    <LinearLayout
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="128dp"
-                        android:orientation="vertical"
-                        tools:layout_editor_absoluteX="8dp"
-                        tools:layout_editor_absoluteY="0dp">
-                    <Button
-                        android:id="@+id/buttonBookmark"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Bookmark" />
-                    <Button
-                        android:id="@+id/buttonUnBookmark"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Unbookmark"
-                        android:visibility="invisible"/>
+                        android:layout_height="match_parent">
 
-                    <TextView
-                        android:id="@+id/textIme"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="TextView"
-                        android:textSize="40sp"/>
-                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            >
+
+                            <Button
+                                android:id="@+id/buttonBookmark"
+                                android:layout_width="match_parent"
+                                android:layout_height="37dp"
+                                android:text="Bookmark" />
+
+                            <Button
+                                android:id="@+id/buttonUnBookmark"
+                                android:layout_width="match_parent"
+                                android:layout_height="37dp"
+                                android:text="Unbookmark"
+                                android:visibility="invisible" />
+
+                            <TextView
+                                android:id="@+id/textIme"
+                                android:layout_width="match_parent"
+                                android:layout_height="62dp"
+                                android:text="TextView"
+                                android:textSize="40sp" />
+                            </LinearLayout>
+                    </ScrollView>
+
                 </LinearLayout>
 
                 <LinearLayout

@@ -14,25 +14,29 @@
             android:id="@+id/buttonGlumci"
             android:layout_width="85dp"
             android:layout_height="match_parent"
-            android:text="glumci"/>
+            android:text="glumci"
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/buttonReziseri"
             android:layout_width="85dp"
             android:layout_height="match_parent"
-            android:text="režiseri"/>
+            android:text="režiseri"
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/buttonZanrovi"
             android:layout_width="85dp"
             android:layout_height="match_parent"
-            android:text="žanrovi"/>
+            android:text="žanrovi"
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/buttonFilmovi"
             android:layout_width="85dp"
             android:layout_height="match_parent"
-            android:text="filmovi"/>
+            android:text="filmovi"
+            android:textSize="10sp" />
 
         <ImageView
             android:id="@+id/imageView5"

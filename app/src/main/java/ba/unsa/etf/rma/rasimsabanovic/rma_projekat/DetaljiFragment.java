@@ -78,6 +78,17 @@ public class DetaljiFragment extends Fragment {
         }
     }
 
+    public boolean DaLiJeUBazi(int id) {
+        String[] kolone = new String[] { GlumciDBHelper.DATABASE_TMDB_ID };
+        String where = GlumciDBHelper.DATABASE_TMDB_ID + "=" + id;
+        GlumciDBHelper helper = new GlumciDBHelper(getActivity(), GlumciDBHelper.DATABASE_NAME, null, 1);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        Cursor test = db.query(GlumciDBHelper.DATABASE_GLUMCI, kolone, where, null, null, null, null);
+        if(test!=null && test.getCount() > 0)
+            return true;
+        return false;
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -103,7 +114,7 @@ public class DetaljiFragment extends Fragment {
             final Button dugme = (Button) v.findViewById(R.id.button);
             final Button dugmeBookmark = (Button) v.findViewById(R.id.buttonBookmark);
             final Button dugmeUnboomkark = (Button) v.findViewById(R.id.buttonUnBookmark);
-            if (GlumciFragment.baza) {
+            if (DaLiJeUBazi(glumac.getId())) {
                 dugmeUnboomkark.setVisibility(View.VISIBLE);
                 dugmeBookmark.setEnabled(false);
                 dugmeUnboomkark.setEnabled(true);

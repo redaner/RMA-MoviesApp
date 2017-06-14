@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -121,9 +122,60 @@ public class KalendarFragment extends Fragment {
 
                     TimeZone timeZone = TimeZone.getDefault();
 
-                    ContentResolver cr = getActivity().getContentResolver();
+                    String projection[] = {"_id", "calendar_displayName"};
+                    Uri calendars;
+                    calendars = Uri.parse("content://com.android.calendar/calendars");
 
-                    ContentValues values = new ContentValues();
+                    ContentResolver contentResolver = getActivity().getContentResolver();
+                    Cursor managedCursor = contentResolver.query(calendars, projection, null, null, null);
+
+                    int kal_id;
+                    int kolona_id = managedCursor.getColumnIndexOrThrow("_id");
+
+                    if (managedCursor.getCount() > 0)  {
+                        managedCursor.moveToFirst();
+                        kal_id = managedCursor.getInt(kolona_id);
+                        ContentValues values = new ContentValues();
+                        values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
+                        values.put(CalendarContract.Events.CALENDAR_ID, kal_id);
+                        values.put(CalendarContract.Events.DTSTART, beginTime.getTimeInMillis());
+                        values.put(CalendarContract.Events.DTEND, endTime.getTimeInMillis());
+                        values.put(CalendarContract.Events.TITLE, imeFilma.getText().toString());
+                        values.put(CalendarContract.Events.DESCRIPTION, komentar.getText().toString());
+                        try {
+                            Uri uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
+                        }
+                        catch (SecurityException e) {
+
+                        }
+                    }
+                    else {
+                        ContentValues values = new ContentValues();
+                        values.put(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, "Prvi");
+                        values.put(CalendarContract.Calendars.NAME,"Prvi");
+                        Uri updateUri = CalendarContract.Calendars.CONTENT_URI;
+                        try {
+                            Uri uri = getActivity().getContentResolver().insert(updateUri, values);
+                        }
+                        catch (Exception e) {
+
+                        }
+                        ContentValues values1 = new ContentValues();
+                        values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
+                        values.put(CalendarContract.Events.CALENDAR_ID, 1);
+                        values.put(CalendarContract.Events.DTSTART, beginTime.getTimeInMillis());
+                        values.put(CalendarContract.Events.DTEND, endTime.getTimeInMillis());
+                        values.put(CalendarContract.Events.TITLE, imeFilma.getText().toString());
+                        values.put(CalendarContract.Events.DESCRIPTION, komentar.getText().toString());
+                        try {
+                            Uri uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
+                        }
+                        catch (SecurityException e) {
+
+                        }
+                    }
+
+                    /*ContentValues values = new ContentValues();
                     values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
                     values.put(CalendarContract.Events.CALENDAR_ID, 1);
                     values.put(CalendarContract.Events.DTSTART, beginTime.getTimeInMillis());
@@ -135,7 +187,7 @@ public class KalendarFragment extends Fragment {
                     }
                     catch (SecurityException e) {
 
-                    }
+                    } */
 
                 }
             });

@@ -22,4 +22,4 @@
 +++++ Uradeno: 
 +++++ sve
 +++++ Nije uradeno:
-+++++ provjera da li ima kalendara i dodavanje istog
++++++ ništa
