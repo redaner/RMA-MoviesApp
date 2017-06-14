@@ -10,6 +10,7 @@
     <string name="imdb">IMDB: </string>
     <string name="bio">Biography: </string>
     <string name="ostalo">OTHER</string>>
+    <string name="filmovi">MOVIES</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

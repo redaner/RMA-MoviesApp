@@ -1,8 +1,11 @@
 package ba.unsa.etf.rma.rasimsabanovic.rma_projekat;
 
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -18,6 +21,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 
 /**
@@ -96,7 +101,18 @@ public class DetaljiFragment extends Fragment {
             final TextView imdb = (TextView) v.findViewById(R.id.textViewImdb);
             final TextView bio = (TextView) v.findViewById(R.id.textViewBiografija);
             final Button dugme = (Button) v.findViewById(R.id.button);
-
+            final Button dugmeBookmark = (Button) v.findViewById(R.id.buttonBookmark);
+            final Button dugmeUnboomkark = (Button) v.findViewById(R.id.buttonUnBookmark);
+            if (GlumciFragment.baza) {
+                dugmeUnboomkark.setVisibility(View.VISIBLE);
+                dugmeBookmark.setEnabled(false);
+                dugmeUnboomkark.setEnabled(true);
+            }
+            else {
+                dugmeUnboomkark.setVisibility(View.INVISIBLE);
+                dugmeBookmark.setEnabled(true);
+                dugmeUnboomkark.setEnabled(false);
+            }
             imdb.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
@@ -104,6 +120,166 @@ public class DetaljiFragment extends Fragment {
                     Uri uri = Uri.parse(s);
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
+                }
+            });
+
+            dugmeUnboomkark.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    String where = GlumciDBHelper.DATABASE_TMDB_ID + "=" + String.valueOf(glumac.getId());
+
+                    GlumciDBHelper helper = new GlumciDBHelper(getActivity(), GlumciDBHelper.DATABASE_NAME, null, 1);
+
+                    SQLiteDatabase db = helper.getWritableDatabase();
+
+                    db.delete(GlumciDBHelper.DATABASE_GLUMCI, where, null);
+
+                    updateZanroviReziseri(glumac.getId());
+                }
+            });
+
+            dugmeBookmark.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    ContentValues cv = new ContentValues();
+                    cv.put(GlumciDBHelper.DATABASE_TMDB_ID, glumac.getId());
+                    cv.put(GlumciDBHelper.DATABASE_IME, glumac.getIme());
+                    cv.put(GlumciDBHelper.DATABASE_GODINA_RODJENJA, glumac.getGodina_rodjenja());
+                    cv.put(GlumciDBHelper.DATABASE_GODINA_SMRTI, glumac.getGodina_smrti());
+                    cv.put(GlumciDBHelper.DATABASE_BIOGRAFIJA, glumac.getBiografija());
+                    cv.put(GlumciDBHelper.DATABASE_SLIKA, glumac.getSlika());
+                    cv.put(GlumciDBHelper.DATABASE_RATING, glumac.getRating());
+                    cv.put(GlumciDBHelper.DATABASE_MJESTO_RODJENJA, glumac.getMjesto_rodjenja());
+                    cv.put(GlumciDBHelper.DATABASE_SPOL, glumac.getSpol());
+                    cv.put(GlumciDBHelper.DATABASE_IMDB, glumac.getImdb());
+
+                    GlumciDBHelper dbHelper = new GlumciDBHelper(getActivity(), GlumciDBHelper.DATABASE_NAME, null, 1);
+
+                    SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                    db.insert(GlumciDBHelper.DATABASE_GLUMCI, null, cv);
+
+                    SaveState ss = (SaveState) getActivity().getApplication();
+
+                    /*while (ss.getReziseri().size() == 0 || ss.getZanrovi().size() == 0) {
+                        ss = (SaveState) getActivity().getApplication();
+                    } */
+
+                    String[] koloneZanrovi = new String[] {GlumciDBHelper.DATABASE_IME};
+                    String[] koloneReziseri = new String[] {GlumciDBHelper.DATABASE_IME};
+
+                    Cursor cursorZanrovi = db.query(GlumciDBHelper.DATABASE_ZANROVI, koloneZanrovi, null, null, null, null, null);
+                    Cursor cursorReziseri = db.query(GlumciDBHelper.DATABASE_REZISERI, koloneReziseri, null, null, null, null, null);
+
+                    ArrayList<String> zanrovi = new ArrayList<String>();
+                    ArrayList<String> reziseri = new ArrayList<String>();
+
+                    ArrayList<Integer> zanroviId = new ArrayList<Integer>();
+                    ArrayList<Integer> reziseriId = new ArrayList<Integer>();
+
+                    int indeksKoloneZanr = cursorZanrovi.getColumnIndexOrThrow(GlumciDBHelper.DATABASE_IME);
+                    int indeksKoloneReziser = cursorReziseri.getColumnIndexOrThrow(GlumciDBHelper.DATABASE_IME);
+
+                   // int indeksKoloneZanrId = cursorZanrovi.getColumnIndexOrThrow(GlumciDBHelper.DATABASE_ID);
+                   // int indeksKoloneReziserId = cursorReziseri.getColumnIndexOrThrow(GlumciDBHelper.DATABASE_ID);
+
+                    while (cursorZanrovi.moveToNext()) {
+                        zanrovi.add(cursorZanrovi.getString(indeksKoloneZanr));
+                        //zanroviId.add(cursorZanrovi.getInt(indeksKoloneZanrId));
+                    }
+
+                    while (cursorReziseri.moveToNext()) {
+                        reziseri.add(cursorReziseri.getString(indeksKoloneReziser));
+                       // reziseriId.add(cursorReziseri.getInt(indeksKoloneReziserId));
+                    }
+
+                    ArrayList<Zanr> zanroviServis = ss.getZanrovi();
+                    ArrayList<Reziser> reziseriServis = ss.getReziseri();
+
+                    for (int i = 0; i < zanroviServis.size(); i++) {
+                        Boolean brejk = false;
+                        for (int j = 0; j < zanrovi.size(); j++) {
+                            if (zanroviServis.get(i).getIme().equals(zanrovi.get(j))) {
+                                brejk = true;
+                                break;
+                            }
+                        }
+                        if (brejk) continue;
+
+                        ContentValues cvZanr = new ContentValues();
+                        cvZanr.put(GlumciDBHelper.DATABASE_IME, zanroviServis.get(i).getIme());
+                        cvZanr.put(GlumciDBHelper.DATABASE_SLIKA, zanroviServis.get(i).getSlika());
+
+                        db.insert(GlumciDBHelper.DATABASE_ZANROVI, null, cvZanr);
+                    }
+
+                    for (int i = 0; i < reziseriServis.size(); i++) {
+                        Boolean brejk = false;
+                        for (int j = 0; j < reziseri.size(); j++) {
+                            if (reziseriServis.get(i).getIme().equals(reziseri.get(j))) {
+                                brejk = true;
+                                break;
+                            }
+                        }
+                        if (brejk) continue;
+
+                        ContentValues cvReziser = new ContentValues();
+                        cvReziser.put(GlumciDBHelper.DATABASE_IME, reziseriServis.get(i).getIme());
+
+                        db.insert(GlumciDBHelper.DATABASE_REZISERI, null, cvReziser);
+                    }
+
+                    koloneZanrovi = new String[] {GlumciDBHelper.DATABASE_ID, GlumciDBHelper.DATABASE_IME};
+                    koloneReziseri = new String[] {GlumciDBHelper.DATABASE_ID, GlumciDBHelper.DATABASE_IME};
+
+                    cursorZanrovi = db.query(GlumciDBHelper.DATABASE_ZANROVI, koloneZanrovi, null, null, null, null, null);
+                    cursorReziseri = db.query(GlumciDBHelper.DATABASE_REZISERI, koloneReziseri, null, null, null, null, null);
+
+                    zanrovi = new ArrayList<String>();
+                    reziseri = new ArrayList<String>();
+
+                    zanroviId = new ArrayList<Integer>();
+                    reziseriId = new ArrayList<Integer>();
+
+                    indeksKoloneZanr = cursorZanrovi.getColumnIndexOrThrow(GlumciDBHelper.DATABASE_IME);
+                    indeksKoloneReziser = cursorReziseri.getColumnIndexOrThrow(GlumciDBHelper.DATABASE_IME);
+
+                    int indeksKoloneZanrId = cursorZanrovi.getColumnIndexOrThrow(GlumciDBHelper.DATABASE_ID);
+                    int indeksKoloneReziserId = cursorReziseri.getColumnIndexOrThrow(GlumciDBHelper.DATABASE_ID);
+
+                    while (cursorZanrovi.moveToNext()) {
+                        zanrovi.add(cursorZanrovi.getString(indeksKoloneZanr));
+                        zanroviId.add(cursorZanrovi.getInt(indeksKoloneZanrId));
+                    }
+
+                    while (cursorReziseri.moveToNext()) {
+                        reziseri.add(cursorReziseri.getString(indeksKoloneReziser));
+                        reziseriId.add(cursorReziseri.getInt(indeksKoloneReziserId));
+                    }
+
+                    for (int i = 0; i < reziseriServis.size(); i++) {
+                        for (int j = 0; j < reziseri.size(); j++) {
+                            if (reziseriServis.get(i).getIme().equals(reziseri.get(j))) {
+                                ContentValues cvReziserVeza = new ContentValues();
+                                cvReziserVeza.put("glumac_id", glumac.getId());
+                                cvReziserVeza.put("reziser_id", reziseriId.get(j));
+
+                                db.insert(GlumciDBHelper.DATABASE_REZISERI_VEZE, null, cvReziserVeza);
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < zanroviServis.size(); i++) {
+                        for (int j = 0; j < zanrovi.size(); j++) {
+                            if (zanroviServis.get(i).getIme().equals(zanrovi.get(j))) {
+                                ContentValues cvZanrVeza = new ContentValues();
+                                cvZanrVeza.put("glumac_id", glumac.getId());
+                                cvZanrVeza.put("zanr_id", zanroviId.get(j));
+
+                                db.insert(GlumciDBHelper.DATABASE_ZANROVI_VEZE, null, cvZanrVeza);
+                            }
+                        }
+                    }
                 }
             });
 
@@ -163,6 +339,66 @@ public class DetaljiFragment extends Fragment {
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    public void updateZanroviReziseri(int id) {
+        String where = "glumac_id" + "=" + String.valueOf(id);
+
+        GlumciDBHelper helper = new GlumciDBHelper(getActivity(), GlumciDBHelper.DATABASE_NAME, null, 1);
+
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        db.delete(GlumciDBHelper.DATABASE_ZANROVI_VEZE, where, null);
+        db.delete(GlumciDBHelper.DATABASE_REZISERI_VEZE, where, null);
+
+        String[] kolone1 = new String[] {GlumciDBHelper.DATABASE_ID};
+        String[] koloneZanrovi = new String[] {"zanr_id"};
+        String[] koloneReziseri = new String[] {"reziser_id"};
+
+        Cursor cursor1 = db.query(GlumciDBHelper.DATABASE_ZANROVI, kolone1, null, null, null, null, null);
+        Cursor cursor2 = db.query(GlumciDBHelper.DATABASE_REZISERI, kolone1, null, null, null, null, null);
+        Cursor cursorZanrovi = db.query(GlumciDBHelper.DATABASE_ZANROVI_VEZE, koloneZanrovi, null, null, null, null, null);
+        Cursor cursorReziseri = db.query(GlumciDBHelper.DATABASE_REZISERI_VEZE, koloneReziseri, null, null, null, null, null);
+
+        ArrayList<Integer> zanrovi = new ArrayList<>();
+        ArrayList<Integer> reziseri = new ArrayList<>();
+        ArrayList<Integer> zanroviVeze = new ArrayList<>();
+        ArrayList<Integer> reziseriVeze = new ArrayList<>();
+
+        int kolonaZanr = cursor1.getColumnIndexOrThrow(GlumciDBHelper.DATABASE_ID);
+        int kolonaReziser = cursor2.getColumnIndexOrThrow(GlumciDBHelper.DATABASE_ID);
+        int kolonaZanrVeze = cursorZanrovi.getColumnIndexOrThrow("zanr_id");
+        int kolonaReziserVeze = cursorReziseri.getColumnIndexOrThrow("reziser_id");
+
+        while (cursor1.moveToNext()) {
+            zanrovi.add(cursor1.getInt(kolonaZanr));
+        }
+
+        while (cursor2.moveToNext()) {
+            reziseri.add(cursor2.getInt(kolonaReziser));
+        }
+
+        while (cursorZanrovi.moveToNext()) {
+            zanroviVeze.add(cursorZanrovi.getInt(kolonaZanrVeze));
+        }
+
+        while (cursorReziseri.moveToNext()) {
+            reziseriVeze.add(cursorReziseri.getInt(kolonaReziserVeze));
+        }
+
+        for (int i = 0; i < zanrovi.size(); i++) {
+            if (!zanroviVeze.contains(zanrovi.get(i))) {
+                String whereZanr = GlumciDBHelper.DATABASE_ID + "=" + String.valueOf(zanrovi.get(i));
+                db.delete(GlumciDBHelper.DATABASE_ZANROVI, whereZanr, null);
+            }
+        }
+
+        for (int i = 0; i < reziseri.size(); i++) {
+            if (!reziseriVeze.contains(reziseri.get(i))) {
+                String whereReziser = GlumciDBHelper.DATABASE_ID + "=" + String.valueOf(reziseri.get(i));
+                db.delete(GlumciDBHelper.DATABASE_REZISERI, whereReziser, null);
+            }
         }
     }
 

@@ -155,26 +155,27 @@ public class PretragaGlumaca extends IntentService {
                     String biography = joPerson.getString("biography");
                     String slika = "http://image.tmdb.org/t/p/w185/" + joPerson.getString("profile_path");
 
-                    glumci.add(new Glumac(Integer.parseInt(id), ime, Integer.parseInt(birthDate.substring(0, 4)), deathDate.equals("") ? -1 : Integer.parseInt(deathDate.substring(0, 4)),
+                    Integer godSmrt;
+
+                   // if (deathDate == null) godSmrt = -1;
+                   //else godSmrt = Integer.parseInt(deathDate.substring(0, 4));
+
+                    if (deathDate == "null") godSmrt = -1;
+                    else godSmrt = Integer.parseInt(deathDate.substring(0, 4));
+
+                    glumci.add(new Glumac(Integer.parseInt(id), ime, Integer.parseInt(birthDate.substring(0, 4)), godSmrt,
                             biography, Double.parseDouble(popularity), slika, placeOfBirth, gender.equals("1") ? "F" : "M", imdb));
-
-
-
 
                 }
                 catch (MalformedURLException e) {
                     mReceiver.send(STATUS_ERROR, bundle);
                 }
                 catch (Exception e) {
+                    System.out.print(e.toString());
                     mReceiver.send(STATUS_ERROR, bundle);
                 }
 
-
-
-
-
             }
-
 
             bundle.putParcelableArrayList("glumci", glumci);
             mReceiver.send(STATUS_FINISHED, bundle);

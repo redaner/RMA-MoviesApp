@@ -73,18 +73,19 @@ public class ButtonsFragment extends Fragment {
         public void onGlumciClick();
         public void onReziseriClick();
         public void onZanroviClick();
+        public void onFilmoviClick();
     }
 
     private Button dugme_glumci;
     private Button dugme_reziseri;
     private Button dugme_zanrovi;
+    private Button dugme_filmovi;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         View v = getView();
-
 
         try {
             oic = (buttonClick)getActivity();
@@ -113,6 +114,13 @@ public class ButtonsFragment extends Fragment {
                 oic.onGlumciClick();
             }
         });
+
+        dugme_filmovi.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                oic.onFilmoviClick();            }
+        });
+
     }
 
     @Override
@@ -124,9 +132,10 @@ public class ButtonsFragment extends Fragment {
         final Button dugme_glumci1 = (Button)v.findViewById(R.id.buttonGlumci);
         final Button dugme_reziseri1 = (Button)v.findViewById(R.id.buttonReziseri);
         final Button dugme_zanrovi1 = (Button)v.findViewById(R.id.buttonZanrovi);
+        final Button dugme_filmovi1 = (Button)v.findViewById(R.id.buttonFilmovi);
         final ImageView ikona = (ImageView)v.findViewById(R.id.imageView5);
 
-
+        dugme_filmovi = dugme_filmovi1;
         dugme_glumci = dugme_glumci1;
         dugme_reziseri = dugme_reziseri1;
         dugme_zanrovi = dugme_zanrovi1;
@@ -135,6 +144,7 @@ public class ButtonsFragment extends Fragment {
         dugme_glumci.setText(R.string.glumci);
         dugme_reziseri.setText(R.string.reziseri);
         dugme_zanrovi.setText(R.string.zanrovi);
+        dugme_filmovi.setText(R.string.filmovi);
 
         return v;
     }

@@ -17,6 +17,16 @@ public class SaveState extends Application {
 
     private ArrayList<Reziser> reziseri = new ArrayList<>();
 
+    private ArrayList<String> filmovi = new ArrayList<>();
+
+    public ArrayList<String> getFilmovi() {
+        return filmovi;
+    }
+
+    public void setFilmovi(ArrayList<String> filmovi) {
+        this.filmovi = filmovi;
+    }
+
     public ArrayList<Zanr> getZanrovi() {
         return zanrovi;
     }

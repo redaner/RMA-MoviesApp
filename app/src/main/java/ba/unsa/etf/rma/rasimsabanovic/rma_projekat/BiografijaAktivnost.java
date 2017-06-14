@@ -1,10 +1,14 @@
 package ba.unsa.etf.rma.rasimsabanovic.rma_projekat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -31,6 +35,8 @@ public class BiografijaAktivnost extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_biografija_aktivnost);
+
+
         glumac = getIntent().getParcelableExtra("glumac");
         Bitmap b = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(
                 "ba.unsa.etf.rma.rasimsabanovic.rma_projekat:drawable/"+glumac.getSlika()

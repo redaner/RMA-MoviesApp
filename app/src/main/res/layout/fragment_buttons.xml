@@ -12,21 +12,27 @@
 
         <Button
             android:id="@+id/buttonGlumci"
-            android:layout_width="104dp"
+            android:layout_width="85dp"
             android:layout_height="match_parent"
             android:text="glumci"/>
 
         <Button
             android:id="@+id/buttonReziseri"
-            android:layout_width="104dp"
+            android:layout_width="85dp"
             android:layout_height="match_parent"
             android:text="režiseri"/>
 
         <Button
             android:id="@+id/buttonZanrovi"
-            android:layout_width="104dp"
+            android:layout_width="85dp"
             android:layout_height="match_parent"
             android:text="žanrovi"/>
+
+        <Button
+            android:id="@+id/buttonFilmovi"
+            android:layout_width="85dp"
+            android:layout_height="match_parent"
+            android:text="filmovi"/>
 
         <ImageView
             android:id="@+id/imageView5"

@@ -53,14 +53,32 @@
                         android:layout_height="wrap_content"
                         app:srcCompat="@drawable/action"/>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="128dp"
+                        android:orientation="vertical"
+                        tools:layout_editor_absoluteX="8dp"
+                        tools:layout_editor_absoluteY="0dp">
+                    <Button
+                        android:id="@+id/buttonBookmark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Bookmark" />
+                    <Button
+                        android:id="@+id/buttonUnBookmark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Unbookmark"
+                        android:visibility="invisible"/>
+
                     <TextView
                         android:id="@+id/textIme"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="TextView"
                         android:textSize="40sp"/>
+                        </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout

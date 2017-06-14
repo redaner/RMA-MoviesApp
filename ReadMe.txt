@@ -18,3 +18,8 @@
 +++++ sve
 +++++ Nije uradeno:
 +++++ ništa
++++++ Spirala 4
++++++ Uradeno: 
++++++ sve
++++++ Nije uradeno:
++++++ provjera da li ima kalendara i dodavanje istog

@@ -206,9 +206,11 @@ public class ZanroviReziseri extends IntentService {
 
 
 
-            ArrayList<Reziser> reziseriFinal;
+            ArrayList<Reziser> reziseriFinal = new ArrayList<>();
 
-            reziseriFinal = new ArrayList<>(reziseri.subList(0, 7));
+            if (reziseri.size() >= 7) {
+                reziseriFinal = new ArrayList<>(reziseri.subList(0, 7));
+            }
 
             bundle.putParcelableArrayList("reziseri", reziseriFinal);
             bundle.putParcelableArrayList("zanrovi", zanroviFinal);
